@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -106,8 +105,9 @@ public class SmallVideoViewActivity extends AppCompatActivity implements
                     //         ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
                     //         ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                     //全屏按钮点击后逻辑处理
-                    Toast.makeText(SmallVideoViewActivity.this, "全屏", Toast.LENGTH_SHORT).show();
-                    updateVideo(true);
+                    // Toast.makeText(SmallVideoViewActivity.this, "全屏", Toast.LENGTH_SHORT).show();
+
+                    updateVideo(!isLandscape);
                     break;
                 case DataInter.Event.EVENT_CODE_ERROR_SHOW:
                     mVideoView.stop();
