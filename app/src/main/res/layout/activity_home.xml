@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/id_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ToolbarPopupTheme"
+        app:title="@string/home_title"
+        app:titleTextColor="#FFFFFF" />
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/id_toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <Button
+                android:id="@+id/btn_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="smallVideo"
+                android:text="横屏小窗口切换到全屏播放" />
+
+            <TextView
+                android:id="@+id/tv_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="当前解码方案为:"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/tv_videoView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:onClick="useBaseVideoView"
+                android:text="BaseVideoView的使用"
+                android:textAllCaps="false"
+                android:textColor="@color/buttonTextColor"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/tv_window_videoView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:onClick="useWindowVideoView"
+                android:text="WindowVideoView的使用"
+                android:textAllCaps="false"
+                android:textColor="@color/buttonTextColor"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/tv_window_play"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:onClick="useFloatWindow"
+                android:text="FloatWindow的无缝切播"
+                android:textAllCaps="false"
+                android:textColor="@color/buttonTextColor"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/tv_multi_play"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:onClick="multiVideoPlay"
+                android:text="多实例播放"
+                android:textAllCaps="false"
+                android:textColor="@color/buttonTextColor"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_avPlayer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="left"
+                android:text="列表播放全屏切换、无缝续播"
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/tv_pager_play"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:onClick="viewPagerPlay"
+                android:text="ViewPager中播放"
+                android:textAllCaps="false"
+                android:textColor="@color/buttonTextColor"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/tv_local_video"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:onClick="singleListPlay"
+                android:text="单列表播放"
+                android:textAllCaps="false"
+                android:textColor="@color/buttonTextColor"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/tv_multi_list"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:onClick="multiListPlay"
+                android:text="多列表播放"
+                android:textAllCaps="false"
+                android:textColor="@color/buttonTextColor"
+                android:textSize="16sp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:onClick="shareAnimationVideos"
+                android:text="共享元素转场动画"
+                android:textAllCaps="false"
+                android:textColor="@color/buttonTextColor"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="left"
+                android:text="MediaPlayer和ExoPlayer支持的格式有限，如发现出错或不能播放，请尝试使用ijkplayer解码"
+                android:textColor="#000000"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="left"
+                android:text="注：其它解码方案的接入请参见demo中的ijkplayer和ExoPlayer的接入示例。"
+                android:textColor="#ca113f"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
