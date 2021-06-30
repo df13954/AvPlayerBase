@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.kk.taurus.avplayer.R;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.kk.taurus.avplayer.HomeActivity;
+import com.kk.taurus.avplayer.R;
+
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
@@ -38,7 +39,7 @@ public class SplashActivity extends AppCompatActivity {
                         )
                         .request();
             }
-        }, 1000);
+        }, 100);
     }
 
     @Override

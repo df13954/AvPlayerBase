@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.kk.taurus.avplayer.demo.DemoDialogActivity;
 import com.kk.taurus.avplayer.ui.BaseVideoViewActivity;
 import com.kk.taurus.avplayer.ui.InputUrlPlayActivity;
 import com.kk.taurus.avplayer.ui.MultiPlayActivity;
@@ -40,7 +41,9 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(mToolBar);
         PlayerConfig.setDefaultPlanId(App.PLAN_ID_EXO);
         updateDecoderInfo();
-        intentTo(SmallVideoViewActivity.class);
+        //横屏小范围播放，切全屏
+        //intentTo(SmallVideoViewActivity.class);
+        intentTo(DemoDialogActivity.class);
     }
 
     @Override
@@ -51,7 +54,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.switchIjkPlayer:
                 PlayerConfig.setDefaultPlanId(App.PLAN_ID_IJK);
                 updateDecoderInfo();
@@ -82,39 +85,39 @@ public class HomeActivity extends AppCompatActivity {
         mInfo.setText("当前解码方案为:" + defaultPlan.getDesc());
     }
 
-    public void useBaseVideoView(View view){
+    public void useBaseVideoView(View view) {
         intentTo(BaseVideoViewActivity.class);
     }
 
-    public void useWindowVideoView(View view){
+    public void useWindowVideoView(View view) {
         intentTo(WindowVideoViewActivity.class);
     }
 
-    public void useFloatWindow(View view){
+    public void useFloatWindow(View view) {
         intentTo(FloatWindowActivity.class);
     }
 
-    public void multiVideoPlay(View view){
+    public void multiVideoPlay(View view) {
         intentTo(MultiPlayActivity.class);
     }
 
-    public void viewPagerPlay(View view){
+    public void viewPagerPlay(View view) {
         intentTo(ViewPagerPlayActivity.class);
     }
 
-    public void singleListPlay(View view){
+    public void singleListPlay(View view) {
         intentTo(ListPlayActivity.class);
     }
 
-    public void multiListPlay(View view){
+    public void multiListPlay(View view) {
         intentTo(MultiListActivity.class);
     }
 
-    public void shareAnimationVideos(View view){
+    public void shareAnimationVideos(View view) {
         intentTo(ShareAnimationActivityA.class);
     }
 
-    private void intentTo(Class<? extends Activity> cls){
+    private void intentTo(Class<? extends Activity> cls) {
         Intent intent = new Intent(getApplicationContext(), cls);
         startActivity(intent);
     }

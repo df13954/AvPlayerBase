@@ -39,6 +39,7 @@ public interface DataInter {
         String KEY_CONTROLLER_COVER = "controller_cover";
         String KEY_GESTURE_COVER = "gesture_cover";
         String KEY_COMPLETE_COVER = "complete_cover";
+        String KEY_POP_COMPLETE_COVER = "pop_complete_cover";
         String KEY_ERROR_COVER = "error_cover";
         String KEY_CLOSE_COVER = "close_cover";
     }
