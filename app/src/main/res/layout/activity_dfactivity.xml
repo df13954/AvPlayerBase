@@ -4,11 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/buttonTextColor"
     tools:context=".demo.dialogdemo.DFActivity">
 
     <Button
-        android:onClick="showFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="showFragment"
         android:text="显示全屏dialog-fragment" />
+
+    <com.kk.taurus.avplayer.demo.widget.MyVerticalSeekBar
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:maxHeight="4dp"
+        android:minHeight="4dp"
+        android:progressDrawable="@drawable/style_video_player_video_seekbar"
+        android:splitTrack="false"
+        android:thumb="@drawable/selector_seek_bar_thumb"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#ccf"
+        android:clipChildren="false"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.kk.taurus.avplayer.demo.widget.MyVerticalSeekBar
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="4dp"
+            android:minHeight="4dp"
+            android:clipChildren="false"
+
+            android:progressDrawable="@drawable/style_video_player_video_seekbar"
+            android:splitTrack="false"
+            android:thumb="@drawable/selector_seek_bar_thumb" />
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

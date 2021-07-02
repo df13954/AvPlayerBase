@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,6 +18,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.kk.taurus.avplayer.R;
+import com.kk.taurus.avplayer.demo.widget.VerticalSeekBar;
 import com.kk.taurus.avplayer.play.DataInter;
 import com.kk.taurus.playerbase.entity.DataSource;
 import com.kk.taurus.playerbase.event.BundlePool;
@@ -31,8 +33,6 @@ import com.kk.taurus.playerbase.receiver.PlayerStateGetter;
 import com.kk.taurus.playerbase.touch.OnTouchGestureListener;
 import com.kk.taurus.playerbase.utils.TimeUtil;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
@@ -40,30 +40,33 @@ import butterknife.Unbinder;
  * Created by Taurus on 2018/4/15.
  */
 
-public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener, OnTouchGestureListener {
+public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener,
+        OnTouchGestureListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     private final int MSG_CODE_DELAY_HIDDEN_CONTROLLER = 101;
 
-    @BindView(R.id.cover_player_controller_top_container)
+    // @BindView(R.id.cover_player_controller_top_container)
     View mTopContainer;
-    @BindView(R.id.cover_player_controller_bottom_container)
+    // @BindView(R.id.cover_player_controller_bottom_container)
     View mBottomContainer;
-    @BindView(R.id.cover_player_controller_image_view_back_icon)
+    // @BindView(R.id.cover_player_controller_image_view_back_icon)
     ImageView mBackIcon;
-    @BindView(R.id.cover_player_controller_text_view_video_title)
+    // @BindView(R.id.cover_player_controller_text_view_video_title)
     TextView mTopTitle;
-    @BindView(R.id.cover_player_controller_image_view_play_state)
+    // @BindView(R.id.cover_player_controller_image_view_play_state)
     ImageView mStateIcon;
-    @BindView(R.id.cover_player_controller_text_view_curr_time)
+    // @BindView(R.id.cover_player_controller_text_view_curr_time)
     TextView mCurrTime;
-    @BindView(R.id.cover_player_controller_text_view_total_time)
+    // @BindView(R.id.cover_player_controller_text_view_total_time)
     TextView mTotalTime;
-    @BindView(R.id.cover_player_controller_image_view_switch_screen)
+    // @BindView(R.id.cover_player_controller_image_view_switch_screen)
     ImageView mSwitchScreen;
-    @BindView(R.id.cover_player_controller_seek_bar)
+    ImageView mSound;
+    // @BindView(R.id.cover_player_controller_seek_bar)
     SeekBar mSeekBar;
-    @BindView(R.id.cover_bottom_seek_bar)
+    // @BindView(R.id.cover_bottom_seek_bar)
     SeekBar mBottomSeekBar;
+    VerticalSeekBar mSbSound;
 
     private int mBufferPercentage;
 
@@ -100,12 +103,31 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
     @Override
     public void onReceiverBind() {
         super.onReceiverBind();
-        unbinder = ButterKnife.bind(this, getView());
+        initAudioManager(getContext());
+        //使用原生方式获取
+        mTopContainer = findViewById(R.id.cover_player_controller_top_container);
+        mBottomContainer = findViewById(R.id.cover_player_controller_bottom_container);
+        mBackIcon = findViewById(R.id.cover_player_controller_image_view_back_icon);
+        mTopTitle = findViewById(R.id.cover_player_controller_text_view_video_title);
+        mStateIcon = findViewById(R.id.cover_player_controller_image_view_play_state);
+        mCurrTime = findViewById(R.id.cover_player_controller_text_view_curr_time);
+        mTotalTime = findViewById(R.id.cover_player_controller_text_view_total_time);
+        mSwitchScreen = findViewById(R.id.cover_player_controller_image_view_switch_screen);
+        mSeekBar = findViewById(R.id.cover_player_controller_seek_bar);
+        mBottomSeekBar = findViewById(R.id.cover_bottom_seek_bar);
+        mSound = findViewById(R.id.iv_sound_btn);
+        mSbSound = findViewById(R.id.sb_sound);
+        //设置点击事件，顶部返回按钮，播放按钮，全屏按钮
+        mBackIcon.setOnClickListener(this);
+        mStateIcon.setOnClickListener(this);
+        mSwitchScreen.setOnClickListener(this);
+        mSound.setOnClickListener(this);
 
         mSeekBar.setOnSeekBarChangeListener(onSeekBarChangeListener);
 
         getGroupValue().registerOnGroupValueUpdateListener(mOnGroupValueUpdateListener);
 
+        mSbSound.setOnSeekBarChangeListener(this);
     }
 
     @Override
@@ -349,6 +371,13 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
         });
         mBottomAnimator.start();
         setBottomSeekBarState(!state);
+        if (displaySoundBar && state) {
+            mSbSound.setVisibility(View.VISIBLE);
+        }
+        if (!state) {
+            displaySoundBar = false;
+            mSbSound.setVisibility(View.GONE);
+        }
     }
 
     private void setControllerState(boolean state) {
@@ -408,7 +437,7 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
         mBottomSeekBar.setSecondaryProgress((int) secondProgress);
     }
 
-    private static final String TAG = "->>";
+    private static final String TAG = "Cover2";
 
     @Override
     public void onTimerUpdate(int curr, int duration, int bufferPercentage) {
@@ -545,5 +574,70 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
 
     @Override
     public void onEndGesture() {
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.cover_player_controller_image_view_back_icon) {
+            //左上角返回按钮点击。目前应该是没有顶部title的，应该不需要
+            notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_BACK, null);
+        } else if (id == R.id.cover_player_controller_image_view_play_state) {
+            //播放按钮点击
+            boolean selected = mStateIcon.isSelected();
+            if (selected) {
+                //继续播放
+                requestResume(null);
+            } else {
+                //停止视频
+                requestPause(null);
+            }
+            mStateIcon.setSelected(!selected);
+        } else if (id == R.id.cover_player_controller_image_view_switch_screen) {
+            notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN, null);
+        } else if (id == R.id.iv_sound_btn) {
+            if (displaySoundBar) {
+                mSbSound.setVisibility(View.GONE);
+            } else {
+                mSbSound.setVisibility(View.VISIBLE);
+            }
+            displaySoundBar = !displaySoundBar;
+        }
+    }
+
+    private boolean displaySoundBar = false;
+    private int mMaxVolume;
+    private int volume;
+    private AudioManager audioManager;
+    private void initAudioManager(Context context) {
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        mMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+    }
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        Log.i(TAG, "onProgressChanged fromUser: " + fromUser + ", p:" + progress);
+        if (!fromUser) {
+            return;
+        }
+        int index = (int) (progress * 1f / 100 * mMaxVolume) + volume;
+        if (index > mMaxVolume)
+            index = mMaxVolume;
+        else if (index < 0) {
+            index = 0;
+        }
+        // 变更声音
+        if (audioManager != null) {
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, index, 0);
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        Log.i(TAG, "onStartTrackingTouch: ");
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        Log.i(TAG, "onStopTrackingTouch: ");
     }
 }

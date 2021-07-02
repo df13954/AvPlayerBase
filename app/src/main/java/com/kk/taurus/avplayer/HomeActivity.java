@@ -46,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
         //intentTo(DemoDialogActivity.class);
         //intentTo(DemoFragmentDialogActivity.class);
         //testDialog(null);
-        //intentTo(DFActivity.class);
+        // intentTo(DFActivity.class);
     }
 
     @Override

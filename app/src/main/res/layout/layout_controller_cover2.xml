@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cover_player_controller_bottom_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:visibility="gone"
+    tools:visibility="visible">
 
     <!--标题-->
     <LinearLayout
         android:id="@+id/cover_player_controller_top_container"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/shape_controller_top_gradient"
         android:gravity="center_vertical"
@@ -44,93 +48,133 @@
     </LinearLayout>
 
     <!--地下控制面板-->
-    <LinearLayout
-        android:id="@+id/cover_player_controller_bottom_container"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/shape_controller_bottom_gradient"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
 
-        <SeekBar
-            android:id="@+id/cover_player_controller_seek_bar"
-            android:layout_width="match_parent"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#333333"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+
+        <ImageView
+            android:id="@+id/cover_player_controller_image_view_play_state"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/selector_play_state"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <TextView
+            android:id="@+id/cover_player_controller_text_view_curr_time"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/cover_player_controller_image_view_play_state"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/cover_player_controller_image_view_play_state"
+            app:layout_constraintTop_toTopOf="@+id/cover_player_controller_image_view_play_state"
+            tools:text="00:00:00" />
+
+
+        <TextView
+            android:id="@+id/cover_player_controller_text_view_total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/cover_player_controller_text_view_curr_time"
+            android:gravity="center"
+            android:paddingRight="10dp"
+            android:textColor="#ffffff"
+            android:textSize="12sp"
+            tools:text="00:00:00" />
+
+        <!--全屏按钮-->
+        <ImageView
+            android:id="@+id/cover_player_controller_image_view_switch_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/icon_full_screen"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+
+        <!--最底下的缓存进度-->
+        <SeekBar
+            android:id="@+id/cover_bottom_seek_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_alignParentBottom="true"
             android:focusable="false"
+            android:maxHeight="0dp"
+            android:minHeight="0dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:progressDrawable="@drawable/style_video_player_video_bottom_seekbar"
+            android:thumb="@null"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.kk.taurus.avplayer.demo.widget.VerticalSeekBarWrapper
+        android:id="@+id/seekBarContainer2"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_marginBottom="30dp"
+        android:minWidth="4dp"
+        app:layout_constraintBottom_toTopOf="@id/iv_sound_btn"
+        app:layout_constraintLeft_toLeftOf="@id/iv_sound_btn"
+        app:layout_constraintRight_toRightOf="@id/iv_sound_btn">
+
+        <com.kk.taurus.avplayer.demo.widget.VerticalSeekBar
+            android:id="@+id/sb_sound"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
             android:maxHeight="4dp"
             android:minHeight="4dp"
             android:progressDrawable="@drawable/style_video_player_video_seekbar"
             android:splitTrack="false"
-            android:thumb="@drawable/selector_seek_bar_thumb" />
+            android:thumb="@drawable/selector_seek_bar_thumb"
+            android:visibility="gone"
+            app:seekBarRotation="CW270"
+            tools:visibility="visible" />
+    </com.kk.taurus.avplayer.demo.widget.VerticalSeekBarWrapper>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/iv_sound_btn"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="10dp"
+        android:src="@android:drawable/presence_audio_away"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
-            <ImageView
-                android:id="@+id/cover_player_controller_image_view_play_state"
-                android:layout_width="wrap_content"
-                android:layout_height="16dp"
-                android:layout_centerVertical="true"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/selector_play_state" />
-
-            <TextView
-                android:id="@+id/cover_player_controller_text_view_curr_time"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@id/cover_player_controller_image_view_play_state"
-                android:gravity="center"
-                android:textColor="#ffffff"
-                android:textSize="12sp"
-                tools:text="00:00:00" />
-
-
-            <TextView
-                android:id="@+id/cover_player_controller_text_view_total_time"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@+id/cover_player_controller_text_view_curr_time"
-                android:gravity="center"
-                android:paddingRight="10dp"
-                android:textColor="#ffffff"
-                android:textSize="12sp"
-                tools:text="00:00:00" />
-
-            <!--全屏按钮-->
-            <ImageView
-                android:id="@+id/cover_player_controller_image_view_switch_screen"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
-                android:padding="8dp"
-                android:scaleType="centerInside"
-                android:src="@mipmap/icon_full_screen" />
-        </RelativeLayout>
-
-
-    </LinearLayout>
-
-    <!--最底下的缓存进度-->
     <SeekBar
-        android:id="@+id/cover_bottom_seek_bar"
+        android:id="@+id/cover_player_controller_seek_bar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="30dp"
+        android:layout_marginBottom="34dp"
         android:focusable="false"
         android:maxHeight="4dp"
         android:minHeight="4dp"
         android:paddingStart="0dp"
         android:paddingEnd="0dp"
-        android:progressDrawable="@drawable/style_video_player_video_bottom_seekbar"
-        android:thumb="@null"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-</RelativeLayout>
+        android:progressDrawable="@drawable/style_video_player_video_seekbar"
+        android:splitTrack="false"
+        android:thumb="@drawable/selector_seek_bar_thumb"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
