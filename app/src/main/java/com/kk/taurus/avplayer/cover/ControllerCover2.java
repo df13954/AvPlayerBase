@@ -444,8 +444,16 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
         // Log.i("->>", "------------------: ");
         setSeekProgress(curr, duration);
         setBottomSeekProgress(curr, duration);
-        setCurrTime(curr);
-        setTotalTime(duration);
+
+        //setCurrTime(curr);
+        String current = TimeUtil.getTime(mTimeFormat, curr);
+        String total = TimeUtil.getTime(mTimeFormat, duration);
+        String format = "%s/%s";
+        String formatTime = String.format(format, current, total);
+
+        mCurrTime.setText(formatTime);
+
+        // setTotalTime(duration);
     }
 
     @Override

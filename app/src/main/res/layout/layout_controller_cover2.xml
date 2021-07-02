@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/cover_player_controller_top_container"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="0dp"
         android:background="@drawable/shape_controller_top_gradient"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -47,37 +47,17 @@
     <LinearLayout
         android:id="@+id/cover_player_controller_bottom_container"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/shape_controller_bottom_gradient"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:visibility="gone"
         tools:visibility="visible">
 
-        <ImageView
-            android:id="@+id/cover_player_controller_image_view_play_state"
-            android:layout_width="wrap_content"
-            android:layout_height="16dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/selector_play_state" />
-
-        <TextView
-            android:id="@+id/cover_player_controller_text_view_curr_time"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="00:00:00"
-            android:textColor="#ffffff"
-            android:textSize="12sp" />
-
         <SeekBar
             android:id="@+id/cover_player_controller_seek_bar"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:focusable="false"
             android:maxHeight="4dp"
             android:minHeight="4dp"
@@ -85,32 +65,63 @@
             android:splitTrack="false"
             android:thumb="@drawable/selector_seek_bar_thumb" />
 
-        <TextView
-            android:id="@+id/cover_player_controller_text_view_total_time"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:paddingRight="10dp"
-            android:text="00:00:00"
-            android:textColor="#ffffff"
-            android:textSize="12sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <!--全屏按钮-->
-        <ImageView
-            android:id="@+id/cover_player_controller_image_view_switch_screen"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
-            android:padding="8dp"
-            android:scaleType="centerInside"
-            android:src="@mipmap/icon_full_screen" />
+            <ImageView
+                android:id="@+id/cover_player_controller_image_view_play_state"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_centerVertical="true"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/selector_play_state" />
+
+            <TextView
+                android:id="@+id/cover_player_controller_text_view_curr_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/cover_player_controller_image_view_play_state"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="12sp"
+                tools:text="00:00:00" />
+
+
+            <TextView
+                android:id="@+id/cover_player_controller_text_view_total_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/cover_player_controller_text_view_curr_time"
+                android:gravity="center"
+                android:paddingRight="10dp"
+                android:textColor="#ffffff"
+                android:textSize="12sp"
+                tools:text="00:00:00" />
+
+            <!--全屏按钮-->
+            <ImageView
+                android:id="@+id/cover_player_controller_image_view_switch_screen"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@mipmap/icon_full_screen" />
+        </RelativeLayout>
+
+
     </LinearLayout>
 
     <!--最底下的缓存进度-->
     <SeekBar
         android:id="@+id/cover_bottom_seek_bar"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="0dp"
         android:layout_alignParentBottom="true"
         android:focusable="false"
         android:maxHeight="4dp"
