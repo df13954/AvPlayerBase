@@ -63,7 +63,7 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
         mVideoView = findViewById(R.id.baseVideoView);
         mRecycler = findViewById(R.id.setting_recycler);
 
-        margin = PUtil.dip2px(this, 2);
+        margin =0;// PUtil.dip2px(this, 2);
 
         updateVideo(false);
 

@@ -599,6 +599,15 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
             if (displaySoundBar) {
                 mSbSound.setVisibility(View.GONE);
             } else {
+                //获取当前音量
+                int p = 0;
+                if (mMaxVolume > 0) {
+                    int volume = getVolume();
+                    p = (int) ((volume * 1f / mMaxVolume) * 100);
+                }
+                mSbSound.setProgress(p);
+                Log.i(TAG, "onClick: " + volume);
+                Log.i(TAG, "onClick: " + p);
                 mSbSound.setVisibility(View.VISIBLE);
             }
             displaySoundBar = !displaySoundBar;
@@ -609,17 +618,19 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
     private int mMaxVolume;
     private int volume;
     private AudioManager audioManager;
+
     private void initAudioManager(Context context) {
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         mMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
     }
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         Log.i(TAG, "onProgressChanged fromUser: " + fromUser + ", p:" + progress);
         if (!fromUser) {
             return;
         }
-        int index = (int) (progress * 1f / 100 * mMaxVolume) + volume;
+        int index = (int) (progress * 1f / 100 * mMaxVolume);
         if (index > mMaxVolume)
             index = mMaxVolume;
         else if (index < 0) {
@@ -634,10 +645,22 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
         Log.i(TAG, "onStartTrackingTouch: ");
+        removeDelayHiddenMessage();
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         Log.i(TAG, "onStopTrackingTouch: ");
+        sendDelayHiddenMessage();
+    }
+
+    private int getVolume() {
+        if (audioManager == null) {
+            return 0;
+        }
+        volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        if (volume < 0)
+            volume = 0;
+        return volume;
     }
 }
