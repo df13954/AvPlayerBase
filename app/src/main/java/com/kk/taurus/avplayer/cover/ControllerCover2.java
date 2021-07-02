@@ -600,14 +600,14 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
                 mSbSound.setVisibility(View.GONE);
             } else {
                 //获取当前音量
-                int p = 0;
+                int percent = 0;
                 if (mMaxVolume > 0) {
                     int volume = getVolume();
-                    p = (int) ((volume * 1f / mMaxVolume) * 100);
+                    percent = (int) ((volume * 1f / mMaxVolume) * 100);
                 }
-                mSbSound.setProgress(p);
+                mSbSound.setProgress(percent);
                 Log.i(TAG, "onClick: " + volume);
-                Log.i(TAG, "onClick: " + p);
+                Log.i(TAG, "onClick: " + percent);
                 mSbSound.setVisibility(View.VISIBLE);
             }
             displaySoundBar = !displaySoundBar;
@@ -662,5 +662,16 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
         if (volume < 0)
             volume = 0;
         return volume;
+    }
+
+    /**
+     * 当音量进度条课件的情况下，更新音量进度条
+     *
+     * @param percent 音量百分比 max = 100
+     */
+    public void updateSoundBar(int percent) {
+        if (mSbSound != null && mSbSound.getVisibility() == View.VISIBLE && percent <= 100) {
+            mSbSound.setProgress(percent);
+        }
     }
 }
