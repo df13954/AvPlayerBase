@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +12,32 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.kk.taurus.avplayer.R;
+import com.kk.taurus.avplayer.play.DataInter;
+import com.kk.taurus.avplayer.play.ReceiverGroupManager;
+import com.kk.taurus.avplayer.utils.DataUtils;
+import com.kk.taurus.avplayer.utils.PUtil;
+import com.kk.taurus.playerbase.assist.InterEvent;
+import com.kk.taurus.playerbase.assist.OnVideoViewEventHandler;
+import com.kk.taurus.playerbase.entity.DataSource;
+import com.kk.taurus.playerbase.event.OnPlayerEventListener;
+import com.kk.taurus.playerbase.receiver.ReceiverGroup;
+import com.kk.taurus.playerbase.widget.BaseVideoView;
 
 
-public class MyDialogFragment extends DialogFragment {
+public class MyDialogFragment extends DialogFragment implements
+        OnPlayerEventListener {
+
+    private BaseVideoView mVideoView;
+    private ReceiverGroup mReceiverGroup;
+    private boolean isLandscape;
+    private boolean hasStart;
 
     public static MyDialogFragment newInstance(long id, String name) {
         MyDialogFragment dialog = new MyDialogFragment();
@@ -67,6 +85,9 @@ public class MyDialogFragment extends DialogFragment {
 
     }
 
+    private int w;
+    private int h;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -81,7 +102,106 @@ public class MyDialogFragment extends DialogFragment {
             int id = (int) arguments.getLong("id");
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(id, id);
             //view.setLayoutParams(lp);
+            w = 960;
+            h = 540;
         }
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
+                , WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //video
+        mVideoView = view.findViewById(R.id.baseVideoView);
+        mVideoView.post(new Runnable() {
+            @Override
+            public void run() {
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
+                layoutParams.width = w;
+                layoutParams.height = h;
+            }
+        });
+        //设置播放器控制块
+        mReceiverGroup = ReceiverGroupManager.get().getReceiverGroupDialog(getContext());
+        mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_CONTROLLER_TOP_ENABLE, true);
+        mVideoView.setReceiverGroup(mReceiverGroup);
+        mVideoView.setEventHandler(onVideoViewEventHandler);
+        mVideoView.setOnPlayerEventListener(this);
+        initPlay();
+    }
+
+    private boolean userPause;
+
+    private OnVideoViewEventHandler onVideoViewEventHandler = new OnVideoViewEventHandler() {
+        @Override
+        public void onAssistHandle(BaseVideoView assist, int eventCode, Bundle bundle) {
+            super.onAssistHandle(assist, eventCode, bundle);
+            switch (eventCode) {
+                case InterEvent.CODE_REQUEST_PAUSE:
+                    userPause = true;
+                    break;
+                case DataInter.Event.EVENT_CODE_REQUEST_BACK:
+                    // if(isLandscape){
+                    //     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    // }else{
+                    //     finish();
+                    // }
+                    break;
+                case DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN:
+                    // setRequestedOrientation(isLandscape ?
+                    //         ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
+                    //         ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    //全屏按钮点击后逻辑处理
+                    // Toast.makeText(SmallVideoViewActivity.this, "全屏", Toast.LENGTH_SHORT).show();
+
+                    updateVideo(!isLandscape);
+                    break;
+                case DataInter.Event.EVENT_CODE_ERROR_SHOW:
+                    mVideoView.stop();
+                    break;
+            }
+        }
+
+        @Override
+        public void requestRetry(BaseVideoView videoView, Bundle bundle) {
+            if (PUtil.isTopActivity(getActivity())) {
+                super.requestRetry(videoView, bundle);
+            }
+        }
+    };
+
+
+    private void initPlay() {
+        if (!hasStart) {
+            DataSource dataSource = new DataSource(DataUtils.VIDEO_URL_09);
+            dataSource.setTitle("音乐和艺术如何改变世界");
+            mVideoView.setDataSource(dataSource);
+            mVideoView.start();
+            hasStart = true;
+        }
+    }
+
+    private void updateVideo(boolean landscape) {
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
+        if (landscape) {
+            //横屏，全屏处理
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            layoutParams.setMargins(0, 0, 0, 0);
+        } else {
+            //16:9 160:90 320:180 640:360 w = 960;
+            //             h = 540;
+            layoutParams.width = 960;//PUtil.getScreenW(this) / 2;
+            layoutParams.height = 540;//layoutParams.width / 2;
+            // RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) flTag.getLayoutParams();
+            // layoutParams = params;
+        }
+        mVideoView.setLayoutParams(layoutParams);
+        isLandscape = landscape;
+
+    }
+
+    @Override
+    public void onPlayerEvent(int i, Bundle bundle) {
+
     }
 
     // @Override
@@ -92,4 +212,15 @@ public class MyDialogFragment extends DialogFragment {
     //         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     //     }
     // }
+
+    @Override
+    public void dismiss() {
+        if (mVideoView != null) {
+            Log.i(TAG, "dismiss: 停止video");
+            mVideoView.stopPlayback();
+        }
+        super.dismiss();
+    }
+
+    private static final String TAG = "MyDialogFragment";
 }

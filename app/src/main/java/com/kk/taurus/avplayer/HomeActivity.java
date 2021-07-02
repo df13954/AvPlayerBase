@@ -42,11 +42,12 @@ public class HomeActivity extends AppCompatActivity {
         PlayerConfig.setDefaultPlanId(App.PLAN_ID_EXO);
         updateDecoderInfo();
         //横屏小范围播放，切全屏
-        intentTo(BaseVideoViewActivity.class);
+        // intentTo(BaseVideoViewActivity.class);
         //intentTo(DemoDialogActivity.class);
         //intentTo(DemoFragmentDialogActivity.class);
         //testDialog(null);
         // intentTo(DFActivity.class);
+        intentTo(DFActivity.class);
     }
 
     @Override

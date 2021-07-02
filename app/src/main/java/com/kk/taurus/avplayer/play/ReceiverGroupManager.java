@@ -72,6 +72,10 @@ public class ReceiverGroupManager {
         return getReceiverGroup(context, null);
     }
 
+    public ReceiverGroup getReceiverGroupDialog(Context context) {
+        return getReceiverGroupDialog(context, null);
+    }
+
     public ReceiverGroup getReceiverGroup(Context context, GroupValue groupValue) {
         ReceiverGroup receiverGroup = new ReceiverGroup(groupValue);
         receiverGroup.addReceiver(KEY_LOADING_COVER, new LoadingCover(context));
@@ -82,6 +86,16 @@ public class ReceiverGroupManager {
         return receiverGroup;
     }
 
+
+    public ReceiverGroup getReceiverGroupDialog(Context context, GroupValue groupValue) {
+        ReceiverGroup receiverGroup = new ReceiverGroup(groupValue);
+        receiverGroup.addReceiver(KEY_LOADING_COVER, new LoadingCover(context));
+        receiverGroup.addReceiver(KEY_CONTROLLER_COVER, new ControllerCover2(context));
+        // receiverGroup.addReceiver(KEY_GESTURE_COVER, new GestureCover(context));
+        receiverGroup.addReceiver(KEY_COMPLETE_COVER, new CompleteCover(context));
+        receiverGroup.addReceiver(KEY_ERROR_COVER, new ErrorCover(context));
+        return receiverGroup;
+    }
     public ReceiverGroup getReceiverPopGroup(Context context) {
         return getReceiverPopGroup(context, null);
     }
