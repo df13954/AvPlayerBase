@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.kk.taurus.avplayer.demo.MyDialogFragment;
+import com.kk.taurus.avplayer.demo.dialogdemo.DFActivity;
 import com.kk.taurus.avplayer.ui.BaseVideoViewActivity;
 import com.kk.taurus.avplayer.ui.InputUrlPlayActivity;
 import com.kk.taurus.avplayer.ui.MultiPlayActivity;
@@ -45,7 +45,8 @@ public class HomeActivity extends AppCompatActivity {
         // intentTo(SmallVideoViewActivity.class);
         //intentTo(DemoDialogActivity.class);
         //intentTo(DemoFragmentDialogActivity.class);
-        testDialog(null);
+        //testDialog(null);
+        intentTo(DFActivity.class);
     }
 
     @Override
@@ -125,12 +126,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void smallVideo(View view) {
+        //横屏，大小切换
         //SmallVideoViewActivity
         Intent intent = new Intent(getApplicationContext(), SmallVideoViewActivity.class);
         startActivity(intent);
     }
 
-    public void testDialog(View view) {
-        MyDialogFragment.newInstance(1000, "").show(getSupportFragmentManager(), "testsfs");
+    public void dialogFragment(View view) {
+        //dialog fragment全屏测试
+        intentTo(DFActivity.class);
     }
 }
