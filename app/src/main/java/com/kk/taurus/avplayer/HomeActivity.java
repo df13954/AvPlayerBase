@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.kk.taurus.avplayer.demo.DemoDialogActivity;
+import com.kk.taurus.avplayer.demo.MyDialogFragment;
 import com.kk.taurus.avplayer.ui.BaseVideoViewActivity;
 import com.kk.taurus.avplayer.ui.InputUrlPlayActivity;
 import com.kk.taurus.avplayer.ui.MultiPlayActivity;
@@ -42,8 +42,10 @@ public class HomeActivity extends AppCompatActivity {
         PlayerConfig.setDefaultPlanId(App.PLAN_ID_EXO);
         updateDecoderInfo();
         //横屏小范围播放，切全屏
-        //intentTo(SmallVideoViewActivity.class);
-        intentTo(DemoDialogActivity.class);
+        // intentTo(SmallVideoViewActivity.class);
+        //intentTo(DemoDialogActivity.class);
+        //intentTo(DemoFragmentDialogActivity.class);
+        testDialog(null);
     }
 
     @Override
@@ -126,5 +128,9 @@ public class HomeActivity extends AppCompatActivity {
         //SmallVideoViewActivity
         Intent intent = new Intent(getApplicationContext(), SmallVideoViewActivity.class);
         startActivity(intent);
+    }
+
+    public void testDialog(View view) {
+        MyDialogFragment.newInstance(1000, "").show(getSupportFragmentManager(), "testsfs");
     }
 }

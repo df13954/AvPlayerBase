@@ -4,17 +4,21 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.kk.taurus.avplayer.App;
 import com.kk.taurus.avplayer.R;
+import com.kk.taurus.avplayer.adapter.OnItemClickListener;
+import com.kk.taurus.avplayer.adapter.SettingAdapter;
+import com.kk.taurus.avplayer.bean.SettingItem;
 import com.kk.taurus.avplayer.cover.ControllerCover;
 import com.kk.taurus.avplayer.play.DataInter;
 import com.kk.taurus.avplayer.play.ReceiverGroupManager;
@@ -31,10 +35,6 @@ import com.kk.taurus.playerbase.receiver.ReceiverGroup;
 import com.kk.taurus.playerbase.render.AspectRatio;
 import com.kk.taurus.playerbase.render.IRender;
 import com.kk.taurus.playerbase.widget.BaseVideoView;
-
-import com.kk.taurus.avplayer.adapter.OnItemClickListener;
-import com.kk.taurus.avplayer.adapter.SettingAdapter;
-import com.kk.taurus.avplayer.bean.SettingItem;
 
 public class BaseVideoViewActivity extends AppCompatActivity implements
         OnItemClickListener<SettingAdapter.SettingItemHolder, SettingItem>, OnPlayerEventListener {
@@ -63,7 +63,7 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
         mVideoView = findViewById(R.id.baseVideoView);
         mRecycler = findViewById(R.id.setting_recycler);
 
-        margin = PUtil.dip2px(this,2);
+        margin = PUtil.dip2px(this, 2);
 
         updateVideo(false);
 
@@ -76,8 +76,17 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
 //        mVideoView.setVolume(0f, 0f);
     }
 
-    private void initPlay(){
-        if(!hasStart){
+    private void initPlay() {
+        //拉满一边不变形，有黑边（可能）
+        // mVideoView.setAspectRatio(AspectRatio.AspectRatio_FIT_PARENT);
+        //满容器，不变形，无黑边
+        mVideoView.setAspectRatio(AspectRatio.AspectRatio_FILL_PARENT);
+        //满容器变形
+        // mVideoView.setAspectRatio(AspectRatio.AspectRatio_MATCH_PARENT);
+        //源视频大小
+        // mVideoView.setAspectRatio(AspectRatio.AspectRatio_ORIGIN);
+
+        if (!hasStart) {
             DataSource dataSource = new DataSource(DataUtils.VIDEO_URL_09);
             dataSource.setTitle("音乐和艺术如何改变世界");
             mVideoView.setDataSource(dataSource);
@@ -88,9 +97,9 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
 
     @Override
     public void onPlayerEvent(int eventCode, Bundle bundle) {
-        switch (eventCode){
+        switch (eventCode) {
             case OnPlayerEventListener.PLAYER_EVENT_ON_VIDEO_RENDER_START:
-                if(mAdapter==null){
+                if (mAdapter == null) {
                     mRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
                     mAdapter = new SettingAdapter(this, SettingItem.initSettingList());
                     mAdapter.setOnItemClickListener(this);
@@ -100,24 +109,24 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
         }
     }
 
-    private OnVideoViewEventHandler onVideoViewEventHandler = new OnVideoViewEventHandler(){
+    private OnVideoViewEventHandler onVideoViewEventHandler = new OnVideoViewEventHandler() {
         @Override
         public void onAssistHandle(BaseVideoView assist, int eventCode, Bundle bundle) {
             super.onAssistHandle(assist, eventCode, bundle);
-            switch (eventCode){
+            switch (eventCode) {
                 case InterEvent.CODE_REQUEST_PAUSE:
                     userPause = true;
                     break;
                 case DataInter.Event.EVENT_CODE_REQUEST_BACK:
-                    if(isLandscape){
+                    if (isLandscape) {
                         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    }else{
+                    } else {
                         finish();
                     }
                     break;
                 case DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN:
                     setRequestedOrientation(isLandscape ?
-                            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
+                            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
                             ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                     break;
                 case DataInter.Event.EVENT_CODE_ERROR_SHOW:
@@ -128,13 +137,13 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
 
         @Override
         public void requestRetry(BaseVideoView videoView, Bundle bundle) {
-            if(PUtil.isTopActivity(BaseVideoViewActivity.this)){
+            if (PUtil.isTopActivity(BaseVideoViewActivity.this)) {
                 super.requestRetry(videoView, bundle);
             }
         }
     };
 
-    private void replay(){
+    private void replay() {
         mVideoView.setDataSource(new DataSource(DataUtils.VIDEO_URL_09));
         mVideoView.start();
     }
@@ -142,7 +151,7 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
     @Override
     public void onItemClick(SettingAdapter.SettingItemHolder holder, SettingItem item, int position) {
         int code = item.getCode();
-        switch (code){
+        switch (code) {
             case SettingItem.CODE_RENDER_SURFACE_VIEW:
                 mVideoView.setRenderType(IRender.RENDER_TYPE_SURFACE_VIEW);
                 break;
@@ -150,23 +159,23 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
                 mVideoView.setRenderType(IRender.RENDER_TYPE_TEXTURE_VIEW);
                 break;
             case SettingItem.CODE_STYLE_ROUND_RECT:
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                    mVideoView.setRoundRectShape(PUtil.dip2px(this,25));
-                }else{
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mVideoView.setRoundRectShape(PUtil.dip2px(this, 25));
+                } else {
                     Toast.makeText(this, "not support", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case SettingItem.CODE_STYLE_OVAL_RECT:
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     mVideoView.setOvalRectShape();
-                }else{
+                } else {
                     Toast.makeText(this, "not support", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case SettingItem.CODE_STYLE_RESET:
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     mVideoView.clearShapeStyle();
-                }else{
+                } else {
                     Toast.makeText(this, "not support", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -189,17 +198,17 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
                 mVideoView.setAspectRatio(AspectRatio.AspectRatio_ORIGIN);
                 break;
             case SettingItem.CODE_PLAYER_MEDIA_PLAYER:
-                if(mVideoView.switchDecoder(PlayerConfig.DEFAULT_PLAN_ID)){
+                if (mVideoView.switchDecoder(PlayerConfig.DEFAULT_PLAN_ID)) {
                     replay();
                 }
                 break;
             case SettingItem.CODE_PLAYER_IJK_PLAYER:
-                if(mVideoView.switchDecoder(App.PLAN_ID_IJK)){
+                if (mVideoView.switchDecoder(App.PLAN_ID_IJK)) {
                     replay();
                 }
                 break;
             case SettingItem.CODE_PLAYER_EXO_PLAYER:
-                if(mVideoView.switchDecoder(App.PLAN_ID_EXO)){
+                if (mVideoView.switchDecoder(App.PLAN_ID_EXO)) {
                     replay();
                 }
                 break;
@@ -224,7 +233,7 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
                 break;
             case SettingItem.CODE_CONTROLLER_RESET:
                 IReceiver receiver = mReceiverGroup.getReceiver(DataInter.ReceiverKey.KEY_CONTROLLER_COVER);
-                if(receiver==null){
+                if (receiver == null) {
                     mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_CONTROLLER_COVER, new ControllerCover(this));
                     Toast.makeText(this, "已添加", Toast.LENGTH_SHORT).show();
                 }
@@ -235,15 +244,15 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
         }
     }
 
-    private void updateVideo(boolean landscape){
+    private void updateVideo(boolean landscape) {
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
-        if(landscape){
+        if (landscape) {
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
             layoutParams.setMargins(0, 0, 0, 0);
-        }else{
-            layoutParams.width = PUtil.getScreenW(this) - (margin*2);
-            layoutParams.height = layoutParams.width * 3/4;
+        } else {
+            layoutParams.width = PUtil.getScreenW(this) - (margin * 2);
+            layoutParams.height = layoutParams.width * 3 / 4;
             layoutParams.setMargins(margin, margin, margin, margin);
         }
         mVideoView.setLayoutParams(layoutParams);
@@ -251,7 +260,7 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if(isLandscape){
+        if (isLandscape) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             return;
         }
@@ -261,10 +270,10 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             isLandscape = true;
             updateVideo(true);
-        }else{
+        } else {
             isLandscape = false;
             updateVideo(false);
         }
@@ -275,11 +284,11 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
         int state = mVideoView.getState();
-        if(state == IPlayer.STATE_PLAYBACK_COMPLETE)
+        if (state == IPlayer.STATE_PLAYBACK_COMPLETE)
             return;
-        if(mVideoView.isInPlaybackState()){
+        if (mVideoView.isInPlaybackState()) {
             mVideoView.pause();
-        }else{
+        } else {
             mVideoView.stop();
         }
     }
@@ -288,12 +297,12 @@ public class BaseVideoViewActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         int state = mVideoView.getState();
-        if(state == IPlayer.STATE_PLAYBACK_COMPLETE)
+        if (state == IPlayer.STATE_PLAYBACK_COMPLETE)
             return;
-        if(mVideoView.isInPlaybackState()){
-            if(!userPause)
+        if (mVideoView.isInPlaybackState()) {
+            if (!userPause)
                 mVideoView.resume();
-        }else{
+        } else {
             mVideoView.rePlay(0);
         }
         initPlay();

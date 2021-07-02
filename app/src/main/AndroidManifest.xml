@@ -17,7 +17,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".demo.DemoDialogActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name=".ui.DemoFragmentDialogActivity"></activity>
+        <activity
+            android:name=".demo.DemoDialogActivity"
+            android:screenOrientation="landscape" />
         <activity android:name=".CCActivity" />
         <activity
             android:name=".ui.SplashActivity"
@@ -49,6 +52,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.BaseVideoViewActivity"
+
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name=".ui.window.WindowVideoViewActivity"
@@ -57,7 +61,7 @@
             android:name=".ui.window.FloatWindowActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="landscape" />
+             />
         <activity
             android:name=".ui.listplay.ListPlayActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
