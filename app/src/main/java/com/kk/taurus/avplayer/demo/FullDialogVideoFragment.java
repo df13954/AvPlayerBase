@@ -31,16 +31,17 @@ import com.kk.taurus.playerbase.receiver.ReceiverGroup;
 import com.kk.taurus.playerbase.widget.BaseVideoView;
 
 
-public class MyDialogFragment extends DialogFragment implements
+public class FullDialogVideoFragment extends DialogFragment implements
         OnPlayerEventListener {
-
+    public static final String KEY_SCREENINFO = "screenInfo";
     private BaseVideoView mVideoView;
     private ReceiverGroup mReceiverGroup;
     private boolean isLandscape;
     private boolean hasStart;
+    private LocationInfo mLocationInfo;
 
-    public static MyDialogFragment newInstance(long id, String name) {
-        MyDialogFragment dialog = new MyDialogFragment();
+    public static FullDialogVideoFragment newInstance(long id, String name, LocationInfo locationInfo) {
+        FullDialogVideoFragment dialog = new FullDialogVideoFragment();
         // 设置主题，这里只能通过xml方式设置主题，不能通过Java代码处理，因为这是getWindow还是null，
         // 而且window的几乎所有属性，都可以通过xml设置
         dialog.setStyle(STYLE_NORMAL, R.style.MyDialogTheme);
@@ -50,6 +51,7 @@ public class MyDialogFragment extends DialogFragment implements
         Bundle bundle = new Bundle();
         bundle.putLong("id", id);
         bundle.putString("name", name);
+        bundle.putParcelable(KEY_SCREENINFO, locationInfo);
         // 把外部传进的参数放到bundle里， 在onCreateView里通过继续getArguments()读取参数，
         // 通过bundle来处理，是因为就算DialogFragment被重建了，也能恢复回来并初始化
         dialog.setArguments(bundle);
@@ -100,10 +102,11 @@ public class MyDialogFragment extends DialogFragment implements
         Bundle arguments = getArguments();
         if (arguments != null) {
             int id = (int) arguments.getLong("id");
+            mLocationInfo = arguments.getParcelable(KEY_SCREENINFO);
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(id, id);
             //view.setLayoutParams(lp);
-            w = 960;
-            h = 540;
+            w = mLocationInfo.w;
+            h = mLocationInfo.h;
         }
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -117,15 +120,18 @@ public class MyDialogFragment extends DialogFragment implements
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
                 layoutParams.width = w;
                 layoutParams.height = h;
+                layoutParams.leftMargin = mLocationInfo.x;
+                layoutParams.topMargin = mLocationInfo.y;
+                mVideoView.setLayoutParams(layoutParams);
+                //设置播放器控制块
+                mReceiverGroup = ReceiverGroupManager.get().getReceiverGroup(getContext());
+                mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_CONTROLLER_TOP_ENABLE, true);
+                mVideoView.setReceiverGroup(mReceiverGroup);
+                mVideoView.setEventHandler(onVideoViewEventHandler);
+                mVideoView.setOnPlayerEventListener(FullDialogVideoFragment.this);
+                initPlay();
             }
         });
-        //设置播放器控制块
-        mReceiverGroup = ReceiverGroupManager.get().getReceiverGroupDialog(getContext());
-        mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_CONTROLLER_TOP_ENABLE, true);
-        mVideoView.setReceiverGroup(mReceiverGroup);
-        mVideoView.setEventHandler(onVideoViewEventHandler);
-        mVideoView.setOnPlayerEventListener(this);
-        initPlay();
     }
 
     private boolean userPause;
@@ -180,6 +186,7 @@ public class MyDialogFragment extends DialogFragment implements
     }
 
     private void updateVideo(boolean landscape) {
+        Log.i(TAG, "updateVideo: 触发横屏？:" + landscape);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
         if (landscape) {
             //横屏，全屏处理
@@ -189,8 +196,10 @@ public class MyDialogFragment extends DialogFragment implements
         } else {
             //16:9 160:90 320:180 640:360 w = 960;
             //             h = 540;
-            layoutParams.width = 960;//PUtil.getScreenW(this) / 2;
-            layoutParams.height = 540;//layoutParams.width / 2;
+            layoutParams.width = w;//PUtil.getScreenW(this) / 2;
+            layoutParams.height = h;//layoutParams.width / 2;
+            layoutParams.topMargin = mLocationInfo.y;
+            layoutParams.leftMargin = mLocationInfo.x;
             // RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) flTag.getLayoutParams();
             // layoutParams = params;
         }

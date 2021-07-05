@@ -53,14 +53,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_bottom"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="41dp"
         android:background="#333333"
         app:layout_constraintBottom_toBottomOf="parent">
 
 
         <ImageView
             android:id="@+id/cover_player_controller_image_view_play_state"
-            android:layout_width="wrap_content"
+            android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_centerVertical="true"
             android:paddingLeft="10dp"
@@ -93,21 +93,21 @@
             android:paddingRight="10dp"
             android:textColor="#ffffff"
             android:textSize="12sp"
-            tools:text="00:00:00" />
+            tools:text="" />
 
         <!--全屏按钮-->
         <ImageView
             android:id="@+id/cover_player_controller_image_view_switch_screen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
             android:padding="8dp"
-            android:scaleType="centerInside"
             android:src="@mipmap/icon_full_screen"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/cover_player_controller_image_view_play_state"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cover_player_controller_image_view_play_state" />
 
 
         <!--最底下的缓存进度-->
@@ -158,6 +158,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginRight="40dp"
+        android:visibility="gone"
         android:layout_marginBottom="10dp"
         android:src="@mipmap/ic_volume_up_white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -167,7 +168,7 @@
         android:id="@+id/cover_player_controller_seek_bar"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_marginBottom="34dp"
+        android:layout_marginBottom="28dp"
         android:focusable="false"
         android:maxHeight="4dp"
         android:minHeight="4dp"
