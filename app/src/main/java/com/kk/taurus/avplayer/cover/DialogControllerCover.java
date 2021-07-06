@@ -18,7 +18,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.kk.taurus.avplayer.R;
-import com.kk.taurus.avplayer.demo.widget.VerticalSeekBar;
 import com.kk.taurus.avplayer.play.DataInter;
 import com.kk.taurus.playerbase.entity.DataSource;
 import com.kk.taurus.playerbase.event.BundlePool;
@@ -33,41 +32,31 @@ import com.kk.taurus.playerbase.receiver.PlayerStateGetter;
 import com.kk.taurus.playerbase.touch.OnTouchGestureListener;
 import com.kk.taurus.playerbase.utils.TimeUtil;
 
-import butterknife.OnClick;
-import butterknife.Unbinder;
-
 /**
  * Created by Taurus on 2018/4/15.
  */
 
-public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener,
+public class DialogControllerCover extends BaseCover implements OnTimerUpdateListener,
         OnTouchGestureListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     private final int MSG_CODE_DELAY_HIDDEN_CONTROLLER = 101;
 
-    // @BindView(R.id.cover_player_controller_top_container)
-    View mTopContainer;
-    // @BindView(R.id.cover_player_controller_bottom_container)
-    View mBottomContainer;
-    // @BindView(R.id.cover_player_controller_image_view_back_icon)
-    ImageView mBackIcon;
-    // @BindView(R.id.cover_player_controller_text_view_video_title)
-    TextView mTopTitle;
-    // @BindView(R.id.cover_player_controller_image_view_play_state)
-    ImageView mStateIcon;
-    // @BindView(R.id.cover_player_controller_text_view_curr_time)
-    TextView mCurrTime;
-    // @BindView(R.id.cover_player_controller_text_view_total_time)
-    TextView mTotalTime;
-    // @BindView(R.id.cover_player_controller_image_view_switch_screen)
-    ImageView mSwitchScreen;
-    ImageView mSound;
-    // @BindView(R.id.cover_player_controller_seek_bar)
-    SeekBar mSeekBar;
-    // @BindView(R.id.cover_bottom_seek_bar)
-    SeekBar mBottomSeekBar;
-    VerticalSeekBar mSbSound;
-
+    private View mTopContainer;
+    private View mBottomContainer;
+    private ImageView mBackIcon;
+    private TextView mTopTitle;
+    private ImageView mStateIcon;
+    private TextView mCurrTime;
+    private TextView mTotalTime;
+    private ImageView mSwitchScreen;
+    // private ImageView mSound;
+    private SeekBar mSeekBar;
+    private SeekBar mBottomSeekBar;
+    // private VerticalSeekBar mSbSound;
+    // private boolean displaySoundBar = false;
+    private int mMaxVolume;
+    private int volume;
+    private AudioManager audioManager;
     private int mBufferPercentage;
 
     private int mSeekProgress = -1;
@@ -92,11 +81,10 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
     private String mTimeFormat;
 
     private boolean mControllerTopEnable;
-    private Unbinder unbinder;
     private ObjectAnimator mBottomAnimator;
     private ObjectAnimator mTopAnimator;
 
-    public ControllerCover2(Context context) {
+    public DialogControllerCover(Context context) {
         super(context);
     }
 
@@ -115,19 +103,19 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
         mSwitchScreen = findViewById(R.id.cover_player_controller_image_view_switch_screen);
         mSeekBar = findViewById(R.id.cover_player_controller_seek_bar);
         mBottomSeekBar = findViewById(R.id.cover_bottom_seek_bar);
-        mSound = findViewById(R.id.iv_sound_btn);
-        mSbSound = findViewById(R.id.sb_sound);
+        // mSound = findViewById(R.id.iv_sound_btn);
+        // mSbSound = findViewById(R.id.sb_sound);
         //设置点击事件，顶部返回按钮，播放按钮，全屏按钮
         mBackIcon.setOnClickListener(this);
         mStateIcon.setOnClickListener(this);
         mSwitchScreen.setOnClickListener(this);
-        mSound.setOnClickListener(this);
+        // mSound.setOnClickListener(this);
 
         mSeekBar.setOnSeekBarChangeListener(onSeekBarChangeListener);
 
         getGroupValue().registerOnGroupValueUpdateListener(mOnGroupValueUpdateListener);
 
-        mSbSound.setOnSeekBarChangeListener(this);
+        // mSbSound.setOnSeekBarChangeListener(this);
     }
 
     @Override
@@ -164,35 +152,6 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
         getGroupValue().unregisterOnGroupValueUpdateListener(mOnGroupValueUpdateListener);
         removeDelayHiddenMessage();
         mHandler.removeCallbacks(mSeekEventRunnable);
-
-        unbinder.unbind();
-
-    }
-
-    @OnClick({
-            R.id.cover_player_controller_image_view_back_icon,
-            R.id.cover_player_controller_image_view_play_state,
-            R.id.cover_player_controller_image_view_switch_screen})
-    public void onViewClick(View view) {
-        switch (view.getId()) {
-            case R.id.cover_player_controller_image_view_back_icon:
-                notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_BACK, null);
-                break;
-            case R.id.cover_player_controller_image_view_play_state:
-                boolean selected = mStateIcon.isSelected();
-                if (selected) {
-                    requestResume(null);
-                } else {
-                    requestPause(null);
-                }
-                mStateIcon.setSelected(!selected);
-                break;
-            case R.id.cover_player_controller_image_view_switch_screen:
-                //全屏按钮,全屏点击之后，触发接口OnVideoViewEventHandler#onAssistHandle，
-                // case：DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN
-                notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN, null);
-                break;
-        }
     }
 
     private IReceiverGroup.OnGroupValueUpdateListener mOnGroupValueUpdateListener =
@@ -371,13 +330,13 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
         });
         mBottomAnimator.start();
         setBottomSeekBarState(!state);
-        if (displaySoundBar && state) {
-            mSbSound.setVisibility(View.VISIBLE);
-        }
-        if (!state) {
-            displaySoundBar = false;
-            mSbSound.setVisibility(View.GONE);
-        }
+        // if (displaySoundBar && state) {
+        // mSbSound.setVisibility(View.VISIBLE);
+        // }
+        // if (!state) {
+        //     displaySoundBar = false;
+        // mSbSound.setVisibility(View.GONE);
+        // }
     }
 
     private void setControllerState(boolean state) {
@@ -538,7 +497,7 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
 
     @Override
     public View onCreateCoverView(Context context) {
-        return View.inflate(context, R.layout.layout_controller_cover2, null);
+        return View.inflate(context, R.layout.hm_dialog_controller_cover, null);
     }
 
     @Override
@@ -596,28 +555,24 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
         } else if (id == R.id.cover_player_controller_image_view_switch_screen) {
             notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN, null);
         } else if (id == R.id.iv_sound_btn) {
-            if (displaySoundBar) {
-                mSbSound.setVisibility(View.GONE);
-            } else {
-                //获取当前音量
-                int percent = 0;
-                if (mMaxVolume > 0) {
-                    int volume = getVolume();
-                    percent = (int) ((volume * 1f / mMaxVolume) * 100);
-                }
-                mSbSound.setProgress(percent);
-                Log.i(TAG, "onClick: " + volume);
-                Log.i(TAG, "onClick: " + percent);
-                mSbSound.setVisibility(View.VISIBLE);
-            }
-            displaySoundBar = !displaySoundBar;
+            // if (displaySoundBar) {
+            //     mSbSound.setVisibility(View.GONE);
+            // } else {
+            //     //获取当前音量
+            //     int percent = 0;
+            //     if (mMaxVolume > 0) {
+            //         int volume = getVolume();
+            //         percent = (int) ((volume * 1f / mMaxVolume) * 100);
+            //     }
+            //     mSbSound.setProgress(percent);
+            //     Log.i(TAG, "onClick: " + volume);
+            //     Log.i(TAG, "onClick: " + percent);
+            //     mSbSound.setVisibility(View.VISIBLE);
+            // }
+            // displaySoundBar = !displaySoundBar;
         }
     }
 
-    private boolean displaySoundBar = false;
-    private int mMaxVolume;
-    private int volume;
-    private AudioManager audioManager;
 
     private void initAudioManager(Context context) {
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
@@ -670,8 +625,8 @@ public class ControllerCover2 extends BaseCover implements OnTimerUpdateListener
      * @param percent 音量百分比 max = 100
      */
     public void updateSoundBar(int percent) {
-        if (mSbSound != null && mSbSound.getVisibility() == View.VISIBLE && percent <= 100) {
-            mSbSound.setProgress(percent);
-        }
+        // if (mSbSound != null && mSbSound.getVisibility() == View.VISIBLE && percent <= 100) {
+        //     mSbSound.setProgress(percent);
+        // }
     }
 }

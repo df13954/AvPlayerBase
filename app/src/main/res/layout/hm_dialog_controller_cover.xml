@@ -129,29 +129,29 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <com.kk.taurus.avplayer.demo.widget.VerticalSeekBarWrapper
-        android:id="@+id/seekBarContainer2"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
-        android:layout_marginBottom="30dp"
-        android:minWidth="4dp"
-        app:layout_constraintBottom_toTopOf="@id/iv_sound_btn"
-        app:layout_constraintLeft_toLeftOf="@id/iv_sound_btn"
-        app:layout_constraintRight_toRightOf="@id/iv_sound_btn">
+<!--    <com.kk.taurus.avplayer.demo.widget.VerticalSeekBarWrapper-->
+<!--        android:id="@+id/seekBarContainer2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="150dp"-->
+<!--        android:layout_marginBottom="30dp"-->
+<!--        android:minWidth="4dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/iv_sound_btn"-->
+<!--        app:layout_constraintLeft_toLeftOf="@id/iv_sound_btn"-->
+<!--        app:layout_constraintRight_toRightOf="@id/iv_sound_btn">-->
 
-        <com.kk.taurus.avplayer.demo.widget.VerticalSeekBar
-            android:id="@+id/sb_sound"
-            android:layout_width="wrap_content"
-            android:layout_height="150dp"
-            android:maxHeight="4dp"
-            android:minHeight="4dp"
-            android:progressDrawable="@drawable/style_video_player_video_seekbar"
-            android:splitTrack="false"
-            android:thumb="@drawable/selector_seek_bar_thumb"
-            android:visibility="gone"
-            app:seekBarRotation="CW270"
-            tools:visibility="visible" />
-    </com.kk.taurus.avplayer.demo.widget.VerticalSeekBarWrapper>
+<!--        <com.kk.taurus.avplayer.demo.widget.VerticalSeekBar-->
+<!--            android:id="@+id/sb_sound"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="150dp"-->
+<!--            android:maxHeight="4dp"-->
+<!--            android:minHeight="4dp"-->
+<!--            android:progressDrawable="@drawable/style_video_player_video_seekbar"-->
+<!--            android:splitTrack="false"-->
+<!--            android:thumb="@drawable/selector_seek_bar_thumb"-->
+<!--            android:visibility="gone"-->
+<!--            app:seekBarRotation="CW270"-->
+<!--            tools:visibility="visible" />-->
+<!--    </com.kk.taurus.avplayer.demo.widget.VerticalSeekBarWrapper>-->
 
     <ImageView
         android:id="@+id/iv_sound_btn"

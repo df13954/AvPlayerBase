@@ -34,10 +34,22 @@
 
     <!-- 这里的parent必须是Theme.AppCompat.Dialog -->
     <style name="MyDialogTheme" parent="Theme.AppCompat.Dialog">
-        <!-- 这两个属性对于一个常规的Dialog，一般必须设置的-->
-        <!-- 这两个属性按照下面的值设置之后，确保了弹窗的实际显示效果，跟你在layout文件中的定义效果是一样的 -->
+<!--        &lt;!&ndash; 这两个属性对于一个常规的Dialog，一般必须设置的&ndash;&gt;-->
+<!--        &lt;!&ndash; 这两个属性按照下面的值设置之后，确保了弹窗的实际显示效果，跟你在layout文件中的定义效果是一样的 &ndash;&gt;-->
+<!--        <item name="android:windowIsFloating">false</item>-->
+<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+        <!-- 上面说过，只要是Dialog，这两个属性必须设置 -->
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+
+        <!--设置透明状态栏，适用于SDK19（4.4）及以上版本-->
+        <item name="android:windowTranslucentStatus" >true</item>
+        <!-- 如果你不需要自定义状态栏颜色，下面两个可不要 -->
+        <item name="android:windowDrawsSystemBarBackgrounds" >true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
+<!--        &lt;!&ndash; 透明导航栏 &ndash;&gt;-->
+<!--        <item name="android:windowTranslucentNavigation">true</item>-->
     </style>
 
 </resources>

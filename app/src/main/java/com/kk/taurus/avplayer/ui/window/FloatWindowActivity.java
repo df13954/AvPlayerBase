@@ -16,7 +16,7 @@ import android.widget.FrameLayout;
 
 import com.kk.taurus.avplayer.R;
 import com.kk.taurus.avplayer.cover.CloseCover;
-import com.kk.taurus.avplayer.cover.GestureCover;
+import com.kk.taurus.avplayer.cover.HmGestureCover;
 import com.kk.taurus.avplayer.play.DataInter;
 import com.kk.taurus.avplayer.play.ReceiverGroupManager;
 import com.kk.taurus.avplayer.utils.PUtil;
@@ -110,7 +110,7 @@ public class FloatWindowActivity extends AppCompatActivity {
             mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_CLOSE_COVER, new CloseCover(this));
         }else{
             mReceiverGroup.removeReceiver(DataInter.ReceiverKey.KEY_CLOSE_COVER);
-            mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new GestureCover(this));
+            mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new HmGestureCover(this));
         }
         mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_CONTROLLER_TOP_ENABLE, !window);
     }

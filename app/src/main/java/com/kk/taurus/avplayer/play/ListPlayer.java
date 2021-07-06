@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.kk.taurus.avplayer.App;
-import com.kk.taurus.avplayer.cover.GestureCover;
+import com.kk.taurus.avplayer.cover.HmGestureCover;
 import com.kk.taurus.avplayer.utils.PUtil;
 import com.kk.taurus.playerbase.assist.AssistPlay;
 import com.kk.taurus.playerbase.assist.OnAssistPlayEventHandler;
@@ -92,7 +92,7 @@ public class ListPlayer extends BSPlayer {
                 break;
             case RECEIVER_GROUP_CONFIG_DETAIL_PORTRAIT_STATE:
             case RECEIVER_GROUP_CONFIG_FULL_SCREEN_STATE:
-                addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new GestureCover(context));
+                addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new HmGestureCover(context));
                 break;
         }
     }

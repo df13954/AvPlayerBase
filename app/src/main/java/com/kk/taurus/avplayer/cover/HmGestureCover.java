@@ -25,27 +25,23 @@ import com.kk.taurus.playerbase.receiver.PlayerStateGetter;
 import com.kk.taurus.playerbase.touch.OnTouchGestureListener;
 import com.kk.taurus.playerbase.utils.TimeUtil;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+public class HmGestureCover extends BaseCover implements OnTouchGestureListener {
 
-public class GestureCover extends BaseCover implements OnTouchGestureListener {
-
-    @BindView(R.id.cover_player_gesture_operation_volume_box)
+    //@BindView(R.id.cover_player_gesture_operation_volume_box)
     View mVolumeBox;
-    @BindView(R.id.cover_player_gesture_operation_brightness_box)
+    // @BindView(R.id.cover_player_gesture_operation_brightness_box)
     View mBrightnessBox;
-    @BindView(R.id.cover_player_gesture_operation_volume_icon)
+    // @BindView(R.id.cover_player_gesture_operation_volume_icon)
     ImageView mVolumeIcon;
-    @BindView(R.id.cover_player_gesture_operation_volume_text)
+    // @BindView(R.id.cover_player_gesture_operation_volume_text)
     TextView mVolumeText;
-    @BindView(R.id.cover_player_gesture_operation_brightness_text)
+    // @BindView(R.id.cover_player_gesture_operation_brightness_text)
     TextView mBrightnessText;
-    @BindView(R.id.cover_player_gesture_operation_fast_forward_box)
+    // @BindView(R.id.cover_player_gesture_operation_fast_forward_box)
     View mFastForwardBox;
-    @BindView(R.id.cover_player_gesture_operation_fast_forward_text_view_step_time)
+    // @BindView(R.id.cover_player_gesture_operation_fast_forward_text_view_step_time)
     TextView mFastForwardStepTime;
-    @BindView(R.id.cover_player_gesture_operation_fast_forward_text_view_progress_time)
+    // @BindView(R.id.cover_player_gesture_operation_fast_forward_text_view_progress_time)
     TextView mFastForwardProgressTime;
 
     private boolean firstTouch;
@@ -76,16 +72,22 @@ public class GestureCover extends BaseCover implements OnTouchGestureListener {
     };
     private boolean horizontalSlide;
     private boolean rightVerticalSlide;
-    private Unbinder unbinder;
 
-    public GestureCover(Context context) {
+    public HmGestureCover(Context context) {
         super(context);
     }
 
     @Override
     public void onReceiverBind() {
         super.onReceiverBind();
-        unbinder = ButterKnife.bind(this, getView());
+        mVolumeBox = findViewById(R.id.cover_player_gesture_operation_volume_box);
+        mBrightnessBox = findViewById(R.id.cover_player_gesture_operation_brightness_box);
+        mVolumeIcon = findViewById(R.id.cover_player_gesture_operation_volume_icon);
+        mVolumeText = findViewById(R.id.cover_player_gesture_operation_volume_text);
+        mBrightnessText = findViewById(R.id.cover_player_gesture_operation_brightness_text);
+        mFastForwardBox = findViewById(R.id.cover_player_gesture_operation_fast_forward_box);
+        mFastForwardStepTime = findViewById(R.id.cover_player_gesture_operation_fast_forward_text_view_step_time);
+        mFastForwardProgressTime = findViewById(R.id.cover_player_gesture_operation_fast_forward_text_view_progress_time);
 
         mBundle = new Bundle();
         initAudioManager(getContext());
@@ -95,7 +97,6 @@ public class GestureCover extends BaseCover implements OnTouchGestureListener {
     @Override
     public void onReceiverUnBind() {
         super.onReceiverUnBind();
-        unbinder.unbind();
     }
 
     private void initAudioManager(Context context) {

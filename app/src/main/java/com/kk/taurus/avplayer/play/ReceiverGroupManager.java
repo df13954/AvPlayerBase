@@ -4,10 +4,11 @@ import android.content.Context;
 
 import com.kk.taurus.avplayer.cover.CompleteCover;
 import com.kk.taurus.avplayer.cover.ControllerCover;
-import com.kk.taurus.avplayer.cover.ControllerCover2;
+import com.kk.taurus.avplayer.cover.DialogControllerCover;
 import com.kk.taurus.avplayer.cover.ControllerCoverPop;
+import com.kk.taurus.avplayer.cover.DialogCompleteCover;
 import com.kk.taurus.avplayer.cover.ErrorCover;
-import com.kk.taurus.avplayer.cover.GestureCover;
+import com.kk.taurus.avplayer.cover.HmGestureCover;
 import com.kk.taurus.avplayer.cover.LoadingCover;
 import com.kk.taurus.avplayer.cover.PopCompleteCover;
 import com.kk.taurus.playerbase.receiver.GroupValue;
@@ -79,9 +80,9 @@ public class ReceiverGroupManager {
     public ReceiverGroup getReceiverGroup(Context context, GroupValue groupValue) {
         ReceiverGroup receiverGroup = new ReceiverGroup(groupValue);
         receiverGroup.addReceiver(KEY_LOADING_COVER, new LoadingCover(context));
-        receiverGroup.addReceiver(KEY_CONTROLLER_COVER, new ControllerCover2(context));
-        receiverGroup.addReceiver(KEY_GESTURE_COVER, new GestureCover(context));
-        receiverGroup.addReceiver(KEY_COMPLETE_COVER, new CompleteCover(context));
+        receiverGroup.addReceiver(KEY_CONTROLLER_COVER, new DialogControllerCover(context));
+        receiverGroup.addReceiver(KEY_GESTURE_COVER, new HmGestureCover(context));
+        receiverGroup.addReceiver(KEY_COMPLETE_COVER, new DialogCompleteCover(context));
         receiverGroup.addReceiver(KEY_ERROR_COVER, new ErrorCover(context));
         return receiverGroup;
     }
@@ -90,7 +91,7 @@ public class ReceiverGroupManager {
     public ReceiverGroup getReceiverGroupDialog(Context context, GroupValue groupValue) {
         ReceiverGroup receiverGroup = new ReceiverGroup(groupValue);
         receiverGroup.addReceiver(KEY_LOADING_COVER, new LoadingCover(context));
-        receiverGroup.addReceiver(KEY_CONTROLLER_COVER, new ControllerCover2(context));
+        receiverGroup.addReceiver(KEY_CONTROLLER_COVER, new DialogControllerCover(context));
         // receiverGroup.addReceiver(KEY_GESTURE_COVER, new GestureCover(context));
         receiverGroup.addReceiver(KEY_COMPLETE_COVER, new CompleteCover(context));
         receiverGroup.addReceiver(KEY_ERROR_COVER, new ErrorCover(context));
