@@ -33,56 +33,51 @@ public class HmPopVideo implements LifecycleObserver, OnPlayerEventListener {
     private static final String TAG = "HmPopVideo";
     private ReceiverGroup mReceiverGroup;
     private BaseVideoView mVideoView;
-
+    /**
+     * 是否用户暂停
+     */
     private boolean userPause;
+    //是否全屏变大
     private boolean isLandscape;
-
-
-    private final PopupWindow mPopupWindow;
+    private PopupWindow mPopupWindow;
+    //默认位置
     private int mMarginLeft;
     private int mMarginTop;
     private int mDefWidth;
     private int mDefHeight;
     private HmGestureCover mGestureCover;
+    //当前根容器大小，全屏的时候，需要这2个参数
     private int mScreenWidth;
     private int mScreenHeight;
-    HmEgretVideoPlayer videoMessage;
-
+    private HmEgretVideoPlayer videoMessage;
 
     public HmPopVideo(Activity activity, View tagView, FrameLayout mRootView, HmEgretVideoPlayer videoPlayer) {
         Log.i(TAG, "HmPopVideo: 创建pop");
-        this.videoMessage = videoPlayer;
-        mScreenWidth = mRootView.getWidth();
-        mScreenHeight = mRootView.getHeight();
-        HmEgretVideoPlayer.EgretVideoPlayer data = videoPlayer.getData();
-        mMarginLeft = data.getRect().get(0);
-        mMarginTop = data.getRect().get(1);
-        mDefWidth = data.getRect().get(2);
-        mDefHeight = data.getRect().get(3);
+        initData(mRootView, videoPlayer);
+        //加载pop布局
         View contentView = LayoutInflater.from(activity).inflate(R.layout.hm_dialog_float_video_layout, null, false);
+        //pop设置默认大小，不获取焦点
         mPopupWindow = new PopupWindow(contentView, mDefWidth, mDefHeight, false);
+        //无动画
         mPopupWindow.setAnimationStyle(0);
-        // mPopupWindow = new PopupWindow(contentView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, false);
-        // mPopupWindow = new PopupWindow(contentView, mScreenWidth / 2, mScreenWidth / 2, false);
-        // mPopupWindow = new PopupWindow(contentView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, false);
-        // popupWindow.setClippingEnabled(false);
-        //穿透,必须在showAtLocation之前设置，不然无效
+        //穿透,必须在showAtLocation showAsDropDown之前设置，不然无效
         // mPopupWindow.setTouchable(0 != videoPlayer.getData().getVideoControl());
+        //pop内可以消费触摸事件
         mPopupWindow.setTouchable(true);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x000000));
-        //设置PopupWindow内容区域外的区域是否响应点击事件（true：响应；false：不响应【默认】）
+        //设置PopupWindow内容区域外的区域是否响应点击事件（true：响应；false：不响应【默认】），就是触摸外面不小时
+        //可点击到地下的容器
         mPopupWindow.setOutsideTouchable(false);
-
-        // mPopupWindow.showAtLocation(tagView, Gravity.LEFT, 0, 0);
+        //相对某个view下面显示
         mPopupWindow.showAsDropDown(tagView, mMarginLeft, mMarginTop);
         mPopupWindow.setOnDismissListener(mOnDismissListener);
         mVideoView = contentView.findViewById(R.id.exoVideo);
-        contentView.findViewById(R.id.iv_dismiss).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismissPop();
-            }
-        });
+        contentView.findViewById(R.id.iv_dismiss).setOnClickListener(v -> dismissPop());
+        //播放器
+        initExoVideo(activity, videoPlayer);
+    }
+
+    private void initExoVideo(Activity activity, HmEgretVideoPlayer videoPlayer) {
         mVideoView.setOnPlayerEventListener(this);
         mVideoView.setEventHandler(onVideoViewEventHandler);
         if (0 != videoPlayer.getData().getVideoControl()) {
@@ -102,17 +97,23 @@ public class HmPopVideo implements LifecycleObserver, OnPlayerEventListener {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
             layoutParams.width = mDefWidth;
             layoutParams.height = mDefHeight;
-            // layoutParams.leftMargin = mMarginLeft;
-            // layoutParams.topMargin = mMarginTop;
-            // if (mGestureCover != null) {
-            //     mGestureCover.updateRectInfo(mDefWidth, mDefHeight);
-            // }
             mVideoView.setLayoutParams(layoutParams);
             mVideoView.setVisibility(View.VISIBLE);
-            DataSource dataSource = new DataSource(data.getUrl());
+            DataSource dataSource = new DataSource(videoPlayer.getData().getUrl());
             mVideoView.setDataSource(dataSource);
             mVideoView.start();
         });
+    }
+
+    private void initData(FrameLayout mRootView, HmEgretVideoPlayer videoPlayer) {
+        this.videoMessage = videoPlayer;
+        mScreenWidth = mRootView.getWidth();
+        mScreenHeight = mRootView.getHeight();
+        HmEgretVideoPlayer.EgretVideoPlayer data = videoPlayer.getData();
+        mMarginLeft = data.getRect().get(0);
+        mMarginTop = data.getRect().get(1);
+        mDefWidth = data.getRect().get(2);
+        mDefHeight = data.getRect().get(3);
     }
 
     private PopupWindow.OnDismissListener mOnDismissListener = new PopupWindow.OnDismissListener() {
@@ -201,7 +202,7 @@ public class HmPopVideo implements LifecycleObserver, OnPlayerEventListener {
     @Override
     public void onPlayerEvent(int eventCode, Bundle bundle) {
         if (eventCode == OnPlayerEventListener.PLAYER_EVENT_ON_PLAY_COMPLETE) {
-
+            // TODO: 2021/7/7 播放完成后？
         }
     }
 
@@ -219,27 +220,20 @@ public class HmPopVideo implements LifecycleObserver, OnPlayerEventListener {
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
         if (landscape) {
             //横屏，全屏处理
-            // mPopupWindow.setWidth(mScreenWidth);
-            // mPopupWindow.setHeight(mScreenHeight);
-            layoutParams.width = mScreenWidth;//ViewGroup.LayoutParams.MATCH_PARENT;
-            layoutParams.height = mScreenHeight;//ViewGroup.LayoutParams.MATCH_PARENT;
+            layoutParams.width = mScreenWidth;
+            layoutParams.height = mScreenHeight;
             mPopupWindow.setAnimationStyle(0);
             mPopupWindow.update(0, 0, mScreenWidth, mScreenHeight);
-            // layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            // layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-            // layoutParams.setMargins(0, 0, 0, 0);
         } else {
             //todo 宽度恢复
             mPopupWindow.setAnimationStyle(0);
             mPopupWindow.update(mMarginLeft, mMarginTop, mDefWidth, mDefHeight);
-            // mPopupWindow.up
             layoutParams.width = -1;
             layoutParams.height = -1;
             layoutParams.topMargin = 0;
-            // layoutParams.leftMargin = mMarginLeft;
+            layoutParams.leftMargin = 0;
         }
         mVideoView.setLayoutParams(layoutParams);
         isLandscape = landscape;
-
     }
 }

@@ -1,6 +1,7 @@
 package com.kk.taurus.avplayer.demo.dialogdemo;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -107,6 +108,7 @@ public class DFActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.i("HmPopVideo", "d f activity onDestroy: ");
         if (mFullDialogVideoFragment != null) {
             mFullDialogVideoFragment.dismiss();
         }
