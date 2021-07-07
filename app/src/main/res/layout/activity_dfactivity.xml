@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/buttonTextColor"
     tools:context=".demo.dialogdemo.DFActivity">
+
+    <View
+        android:id="@+id/tag_view"
+        android:layout_width="1px"
+        android:layout_height="0px"
+        android:background="#ff0000"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/rootView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
         android:onClick="showFragment"
-        android:text="显示全屏dialog-fragment" />
+        android:text="显示全屏dialog-fragment"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.kk.taurus.avplayer.demo.widget.MyVerticalSeekBar
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:maxHeight="4dp"
+
         android:minHeight="4dp"
         android:progressDrawable="@drawable/style_video_player_video_seekbar"
         android:splitTrack="false"
@@ -27,22 +42,42 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#ccf"
         android:clipChildren="false"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.kk.taurus.avplayer.demo.widget.MyVerticalSeekBar
             android:layout_width="180dp"
             android:layout_height="wrap_content"
+            android:clipChildren="false"
             android:maxHeight="4dp"
             android:minHeight="4dp"
-            android:clipChildren="false"
 
             android:progressDrawable="@drawable/style_video_player_video_seekbar"
             android:splitTrack="false"
             android:thumb="@drawable/selector_seek_bar_thumb" />
     </RelativeLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="displayPop"
+        android:layout_marginTop="200dp"
+
+        android:text="pop显示，设置pop大小"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayout" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="testToast"
+        android:layout_gravity="right"
+        android:layout_marginTop="300dp"
+
+        android:text="底下可以点击的按钮"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</FrameLayout>
