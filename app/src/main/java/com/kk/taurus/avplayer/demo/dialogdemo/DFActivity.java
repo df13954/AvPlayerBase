@@ -15,7 +15,7 @@ import com.kk.taurus.avplayer.R;
 import com.kk.taurus.avplayer.demo.FullDialogVideoFragment;
 import com.kk.taurus.avplayer.demo.LocationInfo;
 import com.kk.taurus.avplayer.demo.pop.HmEgretVideoPlayer;
-import com.kk.taurus.avplayer.demo.pop.HmPopVideo;
+import com.kk.taurus.avplayer.demo.pop.HmPopVideoTest;
 import com.kk.taurus.avplayer.utils.HmGsonUtils;
 
 public class DFActivity extends AppCompatActivity {
@@ -23,7 +23,7 @@ public class DFActivity extends AppCompatActivity {
     private FullDialogVideoFragment mFullDialogVideoFragment;
     private FrameLayout rootView;
     private RelativeLayout relativeLayout;
-    private HmPopVideo mPopVideo;
+    private HmPopVideoTest mPopVideo;
     private View tagView;
 
     @Override
@@ -68,7 +68,7 @@ public class DFActivity extends AppCompatActivity {
     }
 
     private void createVideoPopupWindow(HmEgretVideoPlayer videoPlayer) {
-        mPopVideo = new HmPopVideo(this, tagView, rootView, videoPlayer);
+        mPopVideo = new HmPopVideoTest(this, tagView, rootView, videoPlayer);
         getLifecycle().addObserver(mPopVideo);
     }
 

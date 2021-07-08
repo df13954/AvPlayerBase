@@ -29,7 +29,7 @@ import com.kk.taurus.playerbase.widget.BaseVideoView;
 
 import static com.kk.taurus.avplayer.play.DataInter.ReceiverKey.KEY_GESTURE_COVER;
 
-public class HmPopVideo implements LifecycleObserver, OnPlayerEventListener {
+public class HmPopVideoTest implements LifecycleObserver, OnPlayerEventListener {
     private static final String TAG = "HmPopVideo";
     private ReceiverGroup mReceiverGroup;
     private BaseVideoView mVideoView;
@@ -51,7 +51,7 @@ public class HmPopVideo implements LifecycleObserver, OnPlayerEventListener {
     private int mScreenHeight;
     private HmEgretVideoPlayer videoMessage;
 
-    public HmPopVideo(Activity activity, View tagView, FrameLayout mRootView, HmEgretVideoPlayer videoPlayer) {
+    public HmPopVideoTest(Activity activity, View tagView, FrameLayout mRootView, HmEgretVideoPlayer videoPlayer) {
         Log.i(TAG, "HmPopVideo: 创建pop");
         initData(mRootView, videoPlayer);
         //加载pop布局
@@ -105,6 +105,8 @@ public class HmPopVideo implements LifecycleObserver, OnPlayerEventListener {
         });
     }
 
+    private int defMargin = 100;
+
     private void initData(FrameLayout mRootView, HmEgretVideoPlayer videoPlayer) {
         this.videoMessage = videoPlayer;
         mScreenWidth = mRootView.getWidth();
@@ -112,6 +114,7 @@ public class HmPopVideo implements LifecycleObserver, OnPlayerEventListener {
         HmEgretVideoPlayer.EgretVideoPlayer data = videoPlayer.getData();
         mMarginLeft = data.getRect().get(0);
         mMarginTop = data.getRect().get(1);
+        //todo 默认又额外的宽高，来容纳关闭按钮
         mDefWidth = data.getRect().get(2);
         mDefHeight = data.getRect().get(3);
     }
