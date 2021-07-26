@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:background="#ccf"
     android:layout_height="wrap_content"
     >
 
@@ -10,15 +9,14 @@
         android:id="@+id/exoVideo"
         android:layout_width="640px"
         android:layout_height="360px"
-        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true"
         android:visibility="visible" />
 
     <ImageView
         android:id="@+id/iv_dismiss"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignTop="@id/exoVideo"
-        android:layout_marginTop="-20dp"
         android:layout_toRightOf="@id/exoVideo"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/hm_ic_pop_video_dissmiss" />
 </RelativeLayout>

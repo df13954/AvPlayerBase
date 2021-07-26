@@ -5,9 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +14,7 @@ import com.kk.taurus.avplayer.demo.FullDialogVideoFragment;
 import com.kk.taurus.avplayer.demo.LocationInfo;
 import com.kk.taurus.avplayer.demo.pop.HmEgretVideoPlayer;
 import com.kk.taurus.avplayer.demo.pop.HmPopVideoTest;
+import com.kk.taurus.avplayer.demo.pop.PopVideoDemo;
 import com.kk.taurus.avplayer.utils.HmGsonUtils;
 
 public class DFActivity extends AppCompatActivity {
@@ -25,6 +24,7 @@ public class DFActivity extends AppCompatActivity {
     private RelativeLayout relativeLayout;
     private HmPopVideoTest mPopVideo;
     private View tagView;
+    private PopVideoDemo mPopVideoDemo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +33,12 @@ public class DFActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_dfactivity);
         initView();
+        tagView.post(new Runnable() {
+            @Override
+            public void run() {
+                displayPopDemo(null);
+            }
+        });
     }
 
     public void showFragment(View view) {
@@ -56,6 +62,12 @@ public class DFActivity extends AppCompatActivity {
             mPopVideo.getPopupWindow().dismiss();
             getLifecycle().removeObserver(mPopVideo);
             mPopVideo = null;
+            return;
+        }
+        if (mPopVideoDemo != null && mPopVideoDemo.getPopupWindow() != null && mPopVideoDemo.getPopupWindow().isShowing()) {
+            mPopVideoDemo.getPopupWindow().dismiss();
+            getLifecycle().removeObserver(mPopVideoDemo);
+            mPopVideoDemo = null;
             return;
         }
         super.onBackPressed();
@@ -98,11 +110,11 @@ public class DFActivity extends AppCompatActivity {
             "    }";
 
     public void testToast(View view) {
-        Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
-        PopupWindow popupWindow = mPopVideo.getPopupWindow();
-        if (popupWindow != null) {
-            popupWindow.update(0, 0, 800, 400);
-        }
+        // Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
+        // PopupWindow popupWindow = mPopVideo.getPopupWindow();
+        // if (popupWindow != null) {
+        //     popupWindow.update(0, 0, 800, 400);
+        // }
     }
 
     @Override
@@ -118,5 +130,16 @@ public class DFActivity extends AppCompatActivity {
             getLifecycle().removeObserver(mPopVideo);
             mPopVideo = null;
         }
+    }
+
+    public void displayPopDemo(View view) {
+        //pop固定大小，且可以点击地下的控件
+        HmEgretVideoPlayer bean = HmGsonUtils.jsonToBean(ms, HmEgretVideoPlayer.class);
+        videoPopupWindow(bean);
+    }
+
+    private void videoPopupWindow(HmEgretVideoPlayer videoPlayer) {
+        mPopVideoDemo = new PopVideoDemo(this, tagView, rootView, videoPlayer);
+        getLifecycle().addObserver(mPopVideoDemo);
     }
 }

@@ -65,7 +65,6 @@
         android:layout_height="wrap_content"
         android:onClick="displayPop"
         android:layout_marginTop="200dp"
-
         android:text="pop显示，设置pop大小"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout" />
 
@@ -75,9 +74,18 @@
         android:onClick="testToast"
         android:layout_gravity="right"
         android:layout_marginTop="300dp"
-
         android:text="底下可以点击的按钮"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="displayPopDemo"
+        android:layout_marginTop="250dp"
+        android:text="pop显示，设置pop大小"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayout" />
+
+
 </FrameLayout>
